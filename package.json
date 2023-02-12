@@ -1,0 +1,29 @@
+{
+  "name": "andigenadispatch",
+  "version": "0.0.1",
+  "description": "Dispatch server for andigena project.",
+  "main": "andigenadispatch.js",
+  "scripts": {
+    "start": "node andigenadispatch.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndigenaTeam/andigenadispatch.git"
+  },
+  "author": "TheAndigenaTeam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AndigenaTeam/andigenadispatch/issues"
+  },
+  "homepage": "https://github.com/AndigenaTeam/andigenadispatch#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "clear": "^0.1.0",
+    "colorful-log": "^1.0.7",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.0",
+    "protobufjs": "^7.2.2",
+    "superagent": "^8.0.3"
+  }
+}
