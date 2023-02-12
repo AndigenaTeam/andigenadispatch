@@ -88,6 +88,9 @@ const DEFAULT_CONFIG = {
         },
         data: {
             proto: "./data/proto"
+        },
+        keys: {
+            game: "./data/keys/game_keys"
         }
     }
 }
