@@ -23,18 +23,18 @@ module.exports = {
     },
 
     chunkCurrentRegion(query, chunkSize = 256 - 11, key_id = 0) {
-        const gamekeys = new Map()
+        const regionkeys = new Map()
         return new Promise((res) => {
-           const files = readdirSync(`${cfg.advanced.data.keys.game}`)
+           const files = readdirSync(`${cfg.advanced.data.keys.region}`)
             files.forEach(file => {
-                    const keyb = readFileSync(`${cfg.advanced.data.keys.game}/${file}`)
-                    gamekeys.set(file.split(".")[0], keyb)
+                    const keyb = readFileSync(`${cfg.advanced.data.keys.region}/${file}`)
+                    regionkeys.set(file.split(".")[0], keyb)
                 })
 
             let signingkey = readFileSync(`${keys.signingKey}`)
             //backwards compatibility when tm
             //const curOSEncryptKey = readFileSync(`${gamekeys.get(key_id)}`)
-            const curOSEncryptPub = crypto.createPublicKey({key: gamekeys.get(key_id), format: 'pem'}).export({format: 'pem', type: 'spki'})
+            const curOSEncryptPub = crypto.createPublicKey({key: regionkeys.get(key_id), format: 'pem'}).export({format: 'pem', type: 'spki'})
             const signed = crypto.sign("SHA256", query ,{key: signingkey, passphrase: '', padding: crypto.constants.RSA_PKCS1_PADDING})
 
             let chunks = []

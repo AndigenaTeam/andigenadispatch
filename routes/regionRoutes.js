@@ -6,6 +6,7 @@ const keys = require('../data/configs/keys.json')
 const {sendLog} = require('../utils/logUtils')
 const cm = require('../managers/cryptManager')
 const {parseProto} = require("../managers/protoManager")
+const {statusCodes} = require("../utils/constants");
 
 module.exports = (function() {
     let reg = express.Router()
@@ -43,10 +44,9 @@ module.exports = (function() {
     reg.get(`/query_cur_region/:region`, async function (req, res) {
         try {
             let regionname = req.params.region
-            const version = req.query.version.toString().replaceAll(RegExp("[a-zA-Z]", 'g'), "")
-            console.log(regionname, version, req.query.key_id)
+            const version = (req.query.version) ? req.query.version.toString().replaceAll(RegExp("[a-zA-Z]", 'g'), "") : ""
 
-            const url = (process.env.ENV === 'dev') ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `https://${cfg.serverAddress}:${cfg.serverPort}`
+            const url = (cfg.serverDomain === "") ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `${cfg.serverDomain}`
 
             let customconfig = cm.ec2b(Buffer.from(JSON.stringify({coverSwitch: [8], perf_report_config_url: new URL("config/verify", url),
                 perf_report_record_url: new URL("dataUpload", url)
@@ -61,13 +61,28 @@ module.exports = (function() {
                 secretKey: readFileSync(`${keys.dispatchSeed}`)
             })
 
-            parseProto(`${cfg.advanced.data.proto}`, `QueryCurrRegionHttpRsp.proto`, true, {
-                regionInfo, clientSecretKey: readFileSync(`${keys.dispatchSeed}`),
-                regionCustomConfigEncrypted: customconfig
-            }).then(async (resp) => {
-                const selected = await cm.chunkCurrentRegion(resp, 256 - 11, req.query.key_id)
+            let curregionrspd = {regionInfo, clientSecretKey: readFileSync(`${keys.dispatchSeed}`), regionCustomConfigEncrypted: customconfig}
+            let stopserver = {}
+
+            if (region[0].maintenance.enabled) {
+                if (region[0].maintenance.startTime !== 0 && region[0].maintenance.endTime !== 0) {
+                    let header = (region[0].maintenance.header === "") ? `${region[0].displayName} maintenance in progress...` : region[0].maintenance.header
+                    stopserver = {stopBeginTime: Math.floor(region[0].maintenance.startTime / 1000), stopEndTime: Math.floor(region[0].maintenance.endTime / 1000), url: region[0].maintenance.url, contentMsg: `${region[0].maintenance.message}`}
+                    curregionrspd = {retcode: statusCodes.error.MAINTENANCE, msg: `${header}`, stopServer: stopserver, regionInfo: {}}
+                }
+            }
+
+            if (region[0].protocol.forceVersion && !region[0].maintenance.enabled) {
+                if (!region[0].protocol.whitelistedVersions.includes(version)) {
+                    stopserver = {stopBeginTime: Math.floor(Date.now() / 1000), stopEndTime: Math.floor(Date.now() / 1000) * 2, url: region[0].protocol.url, contentMsg: `Your client version ${version} is not whitelisted on this server!\nPlease use one of: ${region[0].protocol.whitelistedVersions} to connect to ${region[0].displayName}.`}
+                    curregionrspd = {retcode: statusCodes.error.MAINTENANCE, msg: "Client version whitelist error", stopServer: stopserver, regionInfo: {}}
+                }
+            }
+
+            parseProto(`${cfg.advanced.data.proto}`, `QueryCurrRegionHttpRsp.proto`, true, curregionrspd).then(async (resp) => {
+                const selected = (req.query.key_id) ? await cm.chunkCurrentRegion(resp, 256 - 11, req.query.key_id) : null
                 res.send(selected)
-                sendLog('dispatch').info(`Querying current region for client with ip ${req.ip}`)
+                sendLog('dispatch').info(`Querying current region for client with ip ${req.ip} (Region: ${regionname})`)
             })
 
         } catch (e) {
