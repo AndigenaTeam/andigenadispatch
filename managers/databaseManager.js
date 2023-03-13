@@ -6,6 +6,12 @@ const models = require('../utils/models')
 const rolemodel = new mongoose.model('roleModel', models.roleSchema(), 'roles')
 
 module.exports = {
+    /**
+     * Initialize connection to MongoDB database.
+     *
+     * @param {string} url Database connection url.
+     * @return {conn} MongoDB database connection.
+     */
     connect(url = process.env.DB_URL) {
         mongoose.connect(`${url}`)
         const conn = mongoose.connection
@@ -22,6 +28,9 @@ module.exports = {
         return conn;
     },
 
+    /**
+     * Populates database with default values.
+     */
     populateDatabaseDefaults() {
         return new Promise(async (res, rej) => {
             rolemodel.countDocuments({name: 'admin'}).then(count => {

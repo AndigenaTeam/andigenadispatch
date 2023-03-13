@@ -2,7 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require("body-parser")
 const http = express()
-
 const {sendLog, archiveOldLogs} = require('./utils/logUtils')
 const {createFoldersAndConfigs} = require('./utils/configUtils')
 const db = require('./managers/databaseManager')

@@ -3,6 +3,9 @@ const constants = require("./constants");
 const {sendLog} = require("./logUtils");
 
 module.exports = {
+    /**
+     * Creates default config/folder if missing on startup.
+     */
     createFoldersAndConfigs() {
         if (!existsSync(`./config.json`)) {
             writeFileSync(`./config.json`, Buffer.from(JSON.stringify(constants.DEFAULT_CONFIG, null, 2)).toString("utf-8"))

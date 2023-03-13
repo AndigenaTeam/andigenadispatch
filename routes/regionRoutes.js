@@ -2,7 +2,6 @@ const express = require('express')
 const {readFileSync} = require('fs')
 const cfg = require("../config.json")
 const keys = require('../data/configs/keys.json')
-
 const {sendLog} = require('../utils/logUtils')
 const cm = require('../managers/cryptManager')
 const {parseProto} = require("../managers/protoManager")
@@ -15,7 +14,7 @@ module.exports = (function() {
     reg.get('/query_region_list', async (req, res) => {
         try {
 
-            let url = (process.env.ENV === 'dev') ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `https://${cfg.serverAddress}:${cfg.serverPort}`
+            let url = (cfg.serverDomain === "") ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `${cfg.serverDomain}`
             let regions = []
 
             cfg.servers.forEach(server => {
@@ -32,10 +31,12 @@ module.exports = (function() {
                 regionList: regions, clientSecretKey: readFileSync(`${keys.dispatchSeed}`),
                 enableLoginPc: true, clientCustomConfigEncrypted: customconfig
             }).then((resp) => {
+                sendLog('/query_region_list').debug(`${Buffer.from(resp).toString("base64")}`)
                 res.send(Buffer.from(resp).toString("base64"))
                 sendLog('dispatch').info(`Querying region list for client with ip ${req.ip}`)
             })
         } catch (e) {
+            res.send(Buffer.from('An error occurred!').toString('base64'))
             sendLog('dispatch').error(e)
         }
     })
@@ -81,11 +82,13 @@ module.exports = (function() {
 
             parseProto(`${cfg.advanced.data.proto}`, `QueryCurrRegionHttpRsp.proto`, true, curregionrspd).then(async (resp) => {
                 const selected = (req.query.key_id) ? await cm.chunkCurrentRegion(resp, 256 - 11, req.query.key_id) : null
+                sendLog(`/query_cur_region/${regionname}`).debug(`${selected}`)
                 res.send(selected)
                 sendLog('dispatch').info(`Querying current region for client with ip ${req.ip} (Region: ${regionname})`)
             })
 
         } catch (e) {
+            res.send(JSON.stringify({content: Buffer.from("An error occurred!").toString('base64'), sign: Buffer.from("An error occurred!").toString('base64')}))
             sendLog('dispatch').error(e)
         }
     })

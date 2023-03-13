@@ -10,32 +10,16 @@ protobufjs.loadFromString = (name, protoStr) => {
 };
 
 module.exports = {
-
+    /**
+     * Constructs protobuf message.
+     *
+     * @param {string} path Path to base protobuf directory.
+     * @param {string} proto Protobuf file name (with extension) itself.
+     * @param {boolean} encode If true will encode protobuf constructed message from JSON object.
+     * @param {Object} data JSON object to be constructed into protobuf message.
+     */
    async parseProto(path = `${cfg.data.proto}/${cfg.protocol.version}`, proto = "", encode = true, data = {}) {
         return new Promise((res, rej) => {
-            // reimplement if protos rly grow big
-
-            /*let parsed = new Map()
-            tar.list({
-                    sync: true,
-                    file: `${path}`,
-                    filter: path => path === `${proto}`,
-                    onentry: entry => entry.on('data', d => {parsed.set(entry.path, d)})
-                })
-
-            let selected = Array.from(parsed.keys()).filter(f => f === proto)
-            let buffer = parsed.get(selected[0])
-
-            console.log(Buffer.from(buffer).toString("utf-8"))
-
-            writeFileSync(`./data/proto/tmp/${selected[0]}`, buffer, {encoding: "utf-8"})
-
-            setTimeout(() => {
-                readdirSync('./data/proto/tmp/').forEach(f => {
-                    unlinkSync(`./data/proto/tmp/${f}`)
-                })
-            }, 10000)*/
-
            protobufjs.load(`${path}/${proto}`).then(root => {
                let lookup = root.lookupType(`${proto.replaceAll(".proto", "")}`)
 

@@ -3,7 +3,6 @@ const cfg = require("../config.json");
 const keys = require("../data/configs/keys.json");
 const crypto = require("crypto");
 module.exports = {
-
     xorData(data, key) {
         for (let i = 0; i < data.length; i++) {
             data[i] ^= key[i % key.length];
@@ -16,12 +15,27 @@ module.exports = {
         return other;
     },
 
+    /**
+     * ec2b provided buffer with provided key.
+     *
+     * @param {Buffer} buffer Buffer to ec2b.
+     * @param {Buffer} key Key to use.
+     * @return {Buffer} ec2b'ed buffer.
+     */
     ec2b(buffer, key) {
         buffer = this.cloneBuffer(buffer);
         this.xorData(buffer, key);
         return buffer;
     },
 
+    /**
+     * Chunk current region and encrypt chunks.
+     *
+     * @param {Buffer} query Protobuf encoded query.
+     * @param {Number} chunkSize Chunking size.
+     * @param {Number} key_id Id of the key to use for encrypting.
+     * @return {Promise} Stringified JSON object.
+     */
     chunkCurrentRegion(query, chunkSize = 256 - 11, key_id = 0) {
         const regionkeys = new Map()
         return new Promise((res) => {
