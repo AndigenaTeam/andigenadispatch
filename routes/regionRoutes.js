@@ -13,7 +13,12 @@ module.exports = (function() {
 // /query_region_list?version=OSRELWin2.6.0&lang=1&platform=3&binary=1&time=966&channel_id=1&sub_channel_id=0
     reg.get('/query_region_list', async (req, res) => {
         try {
-
+            let sdke;
+            if (cfg.advanced.sdkenv.force) {
+                sdke = cfg.advanced.sdkenv.env;
+            } else {
+                sdke = (req.query.version.includes("CN")) ? 0 : 2
+            }
             let url = (cfg.serverDomain === "") ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `${cfg.serverDomain}`
             let regions = []
 
@@ -24,8 +29,8 @@ module.exports = (function() {
                 }).then((resp) => regions.push(resp))
             })
 
-            let customconfig = cm.ec2b(Buffer.from(JSON.stringify({sdkenv: 2, checkdevice: false, loadPatch: false,
-                showexception: (process.env.ENV === "dev"), regionConfig: "pm|fk|add", downloadMode: 0}), "utf8"), readFileSync(`${keys.dispatchKey}`))
+            let customconfig = cm.ec2b(Buffer.from(JSON.stringify({sdkenv: sdke, checkdevice: false, loadPatch: false,
+                showexception: (process.env.ENV === "dev"), regionConfig: "pm|fk|add", downloadMode: 0, }), "utf8"), readFileSync(`${keys.dispatchKey}`))
 
             parseProto(`${cfg.advanced.data.proto}`, `QueryRegionListHttpRsp.proto`, true, {
                 regionList: regions, clientSecretKey: readFileSync(`${keys.dispatchSeed}`),

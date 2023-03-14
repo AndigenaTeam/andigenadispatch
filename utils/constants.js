@@ -57,6 +57,10 @@ const DEFAULT_CONFIG = {
         }
     ],
     advanced: {
+        sdkenv: {
+            force: false,
+            env: 0
+        },
         data: {
             proto: "./data/proto"
         },
