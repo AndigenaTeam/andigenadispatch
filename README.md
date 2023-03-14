@@ -8,11 +8,12 @@ This small webserver is responsible for handling region dispatching for Andigena
 
 ## How to use in production
 1. Clone/download this repository `git clone https://github.com/AndigenaTeam/andigenadispatch.git`
-2. Start your server
-3. Server will generate default configuration files and empty `/data/proto` directory
-4. Place your dispatch protos in `/data/proto`
-5. Start/restart your server
-6. **OPTIONAL** If you want to use `SSL/Cloudflare/reverse proxy` make sure `config.json` has `serverDomain` parameter set to your domain (including `http://` / `https://`)
+2. Copy `.env.example` and rename to `.env`
+3. Start your server
+4. Server will generate default configuration files and empty `/data/proto` directory
+5. Place your dispatch protos in `/data/proto`
+6. Start/restart your server
+7. **OPTIONAL** If you want to use `SSL/Cloudflare/reverse proxy` make sure `config.json` has `serverDomain` parameter set to your domain (including `http://` / `https://`)
 
 ## Issues & Contributions
 If you want to contribute you are feel free to make a pull request.
