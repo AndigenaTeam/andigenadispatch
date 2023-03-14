@@ -12,8 +12,9 @@ This small webserver is responsible for handling region dispatching for Andigena
 3. Start your server
 4. Server will generate default configuration files and empty `/data/proto` directory
 5. Place your dispatch protos in `/data/proto`
-6. Start/restart your server
-7. **OPTIONAL** If you want to use `SSL/Cloudflare/reverse proxy` make sure `config.json` has `serverDomain` parameter set to your domain (including `http://` / `https://`)
+6. Make your configuration changes if needed
+7. Start/restart your server
+8. **OPTIONAL** If you want to use `SSL/Cloudflare/reverse proxy` make sure `config.json` has `serverDomain` parameter set to your domain (including `http://` / `https://`)
 
 ## Issues & Contributions
 If you want to contribute you are feel free to make a pull request.
