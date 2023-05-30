@@ -4,10 +4,9 @@ const bodyParser = require("body-parser")
 const http = express()
 const {sendLog, archiveOldLogs} = require('./utils/logUtils')
 const {createFoldersAndConfigs} = require('./utils/configUtils')
-const db = require('./managers/databaseManager')
 
-archiveOldLogs().then(() => {})
-createFoldersAndConfigs()
+archiveOldLogs().then(() => {});
+createFoldersAndConfigs();
 const cfg = require('./config.json')
 
 http.use(bodyParser.urlencoded({extended: true}))
@@ -21,6 +20,5 @@ http.get('/', async function(req, res) {
 })
 
 const server = http.listen(cfg.serverPort, `${cfg.serverAddress}`, async () => {
-    db.connect(process.env.DB_URL)
     sendLog("dispatch").info(`AndigenaDispatch listening on ${server.address().address}:${server.address().port}`)
 })

@@ -23,7 +23,6 @@
     "compressing": "^1.8.0",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
-    "mongoose": "^7.0.1",
     "protobufjs": "^7.2.2"
   }
 }

@@ -41,10 +41,12 @@ const DEFAULT_CONFIG = {
             id: "os_andigena",
             displayName: "Andigena Test",
             gameAddress: "127.0.0.1:8999",
+            useGameDomain: false,
+            gameDomain: "test.andigenaproject.org",
             maintenance: {
                 enabled: false,
-                startTime: 1678596956514,
-                endTime: 1678597030228,
+                startTime: "2023-05-30 01:00:00",
+                endTime: "2023-06-02 01:00:00",
                 url: "https://github.com/andigenateam",
                 header: "Maintenance in progress...",
                 message: "Server is under maintenance! Check back later..."
@@ -54,6 +56,17 @@ const DEFAULT_CONFIG = {
                 url: "https://github.com/andigenateam",
                 whitelistedVersions: ["3.5.0"]
             },
+            urls: {
+                officialCommunity: "https://google.com",
+                userCenter: "https://google.com",
+                accountBind: "https://google.com",
+                cdKey: "https://google.com",
+                privacyPolicy: "https://google.com",
+                handbook: "https://google.com",
+                bulletin: "https://google.com",
+                feedback: "https://google.com",
+                payCallback: "https://google.com"
+            }
         }
     ],
     advanced: {

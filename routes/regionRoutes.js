@@ -54,26 +54,26 @@ module.exports = (function() {
 
             const url = (cfg.serverDomain === "") ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `${cfg.serverDomain}`
 
-            let customconfig = cm.ec2b(Buffer.from(JSON.stringify({coverSwitch: [8], perf_report_config_url: new URL("config/verify", url),
-                perf_report_record_url: new URL("dataUpload", url)
-            })), readFileSync(`${keys.dispatchKey}`))
+            let customconfig = cm.ec2b(Buffer.from(JSON.stringify({coverSwitch: [8], perf_report_config_url: new URL("config/verify", url), perf_report_record_url: new URL("dataUpload", url)})), readFileSync(`${keys.dispatchKey}`))
 
             const region = cfg.servers.filter(server => server.id === regionname)
             const gameIP = region[0].gameAddress.split(":")[0]
             const gamePort = region[0].gameAddress.split(":")[1]
 
             let regionInfo = await parseProto(`${cfg.advanced.data.proto}`, `RegionInfo.proto`, false,{
-                gateserverIp: `${gameIP}`, gateserverPort: parseInt(gamePort),
-                secretKey: readFileSync(`${keys.dispatchSeed}`)
+                gateserverIp: `${gameIP}`, gateserverPort: parseInt(gamePort), useGateserverDomainname: region[0].useGameDomain, gateserverDomainname: region[0].gameDomain, secretKey: readFileSync(`${keys.dispatchSeed}`),
+                officialCommunityUrl: region[0].urls.officialCommunity, userCenterUrl: region[0].urls.userCenter, accountBindUrl: region[0].urls.accountBind,
+                cdKeyUrl: region[0].urls.cdKey, privacyPolicyUrl: region[0].urls.privacyPolicy, handbookUrl: region[0].urls.handbook, bulletinUrl: region[0].urls.bulletin,
+                feedbackUrl: region[0].urls.feedback, payCallbackUrl: region[0].urls.payCallback
             })
 
             let curregionrspd = {regionInfo, clientSecretKey: readFileSync(`${keys.dispatchSeed}`), regionCustomConfigEncrypted: customconfig}
             let stopserver = {}
 
             if (region[0].maintenance.enabled) {
-                if (region[0].maintenance.startTime !== 0 && region[0].maintenance.endTime !== 0) {
+                if (region[0].maintenance.startTime !== "" && region[0].maintenance.endTime !== "") {
                     let header = (region[0].maintenance.header === "") ? `${region[0].displayName} maintenance in progress...` : region[0].maintenance.header
-                    stopserver = {stopBeginTime: Math.floor(region[0].maintenance.startTime / 1000), stopEndTime: Math.floor(region[0].maintenance.endTime / 1000), url: region[0].maintenance.url, contentMsg: `${region[0].maintenance.message}`}
+                    stopserver = {stopBeginTime: Math.floor(new Date(`${region[0].maintenance.startTime}`).getTime() / 1000), stopEndTime: Math.floor(new Date(`${region[0].maintenance.endTime}`).getTime() / 1000).valueOf(), url: region[0].maintenance.url, contentMsg: `${region[0].maintenance.message}`}
                     curregionrspd = {retcode: statusCodes.error.MAINTENANCE, msg: `${header}`, stopServer: stopserver, regionInfo: {}}
                 }
             }
