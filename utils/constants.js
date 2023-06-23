@@ -40,7 +40,7 @@ const DEFAULT_CONFIG = {
         {
             id: "os_andigena",
             displayName: "Andigena Test",
-            gameAddress: "127.0.0.1:8999",
+            gameAddress: "127.0.0.1:22102",
             useGameDomain: false,
             gameDomain: "test.andigenaproject.org",
             maintenance: {
