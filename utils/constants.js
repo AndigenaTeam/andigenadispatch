@@ -76,9 +76,6 @@ const DEFAULT_CONFIG = {
         },
         data: {
             proto: "./data/proto"
-        },
-        keys: {
-            region: "./data/keys/region_keys"
         }
     }
 }
@@ -88,10 +85,7 @@ const DEFAULT_KEYS_CONFIG = {
     dispatchSeed: "./data/keys/dispatchSeed.bin",
     secretKey: "./data/keys/secretKey.bin",
     signingKey: "./data/keys/SigningKey.pem",
-    auth: {
-        public: "./data/keys/auth/auth_public_key.pem",
-        private: "./data/keys/auth/auth_private_key.pem"
-    }
+    regionKeysPath: "./data/keys/region_keys"
 }
 
 module.exports = {DEFAULT_CONFIG, DEFAULT_KEYS_CONFIG, EMAIL_REGEX, ClientType, statusCodes}

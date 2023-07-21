@@ -19,6 +19,7 @@ module.exports = (function() {
             } else {
                 sdke = (req.query.version.includes("CN")) ? 0 : 2
             }
+
             let url = (cfg.serverDomain === "") ? `http://${cfg.serverAddress}:${cfg.serverPort}` : `${cfg.serverDomain}`
             let regions = []
 

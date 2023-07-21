@@ -1,6 +1,6 @@
 {
   "name": "andigenadispatch",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Dispatch server for andigena project.",
   "main": "andigenadispatch.js",
   "scripts": {

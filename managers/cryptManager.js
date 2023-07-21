@@ -1,5 +1,4 @@
 const {readFileSync, readdirSync} = require("fs");
-const cfg = require("../config.json");
 const keys = require("../data/configs/keys.json");
 const crypto = require("crypto");
 module.exports = {
@@ -39,9 +38,9 @@ module.exports = {
     chunkCurrentRegion(query, chunkSize = 256 - 11, key_id = 0) {
         const regionkeys = new Map()
         return new Promise((res) => {
-           const files = readdirSync(`${cfg.advanced.data.keys.region}`)
+           const files = readdirSync(`${keys.regionKeysPath}`)
             files.forEach(file => {
-                    const keyb = readFileSync(`${cfg.advanced.data.keys.region}/${file}`)
+                    const keyb = readFileSync(`${keys.regionKeysPath}/${file}`)
                     regionkeys.set(file.split(".")[0], keyb)
                 })
 
