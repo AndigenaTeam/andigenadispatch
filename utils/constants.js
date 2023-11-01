@@ -34,7 +34,7 @@ const statusCodes = {
 
 const DEFAULT_CONFIG = {
     serverAddress: "127.0.0.1",
-    serverPort: 663,
+    serverPort: 2063,
     serverDomain: "",
     servers: [
         {

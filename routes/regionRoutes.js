@@ -99,5 +99,18 @@ module.exports = (function() {
         }
     })
 
+    // /query_security_file?file_key=OSRELWin3.4.0
+    reg.get(`/query_security_file`, async function (req, res) {
+        try {
+            // temp stub
+            sendLog('/query_security_file').debug("Querying security_file endpoint...");
+            res.json({retcode: 0})
+
+        } catch (e) {
+            res.send(JSON.stringify({content: Buffer.from("An error occurred!").toString('base64'), sign: Buffer.from("An error occurred!").toString('base64')}))
+            sendLog('dispatch').error(e)
+        }
+    })
+
     return reg;
 })()
